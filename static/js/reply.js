@@ -6,6 +6,7 @@ function dateToYYYYMMDDHHMMSS() {
 
 async function replySubmit() {
   const queryString = new URLSearchParams(window.location.search);
+  const boardId = queryString.get('id');
   const formReply = document.getElementById('form-reply');
   const URL = '/detail/reply';
   const options = {
@@ -14,7 +15,7 @@ async function replySubmit() {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      queryString: queryString.get('id'),
+      boardId: boardId,
       replyContent: formReply.value,
       date: dateToYYYYMMDDHHMMSS(),
     }),

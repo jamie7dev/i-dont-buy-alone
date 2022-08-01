@@ -308,4 +308,4 @@ Temporary Items
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,flask,python
-files: 서류철, 철하다, 제기하다, 문서를 철하는 기구, 철해둔 문서
+mongo_info.py

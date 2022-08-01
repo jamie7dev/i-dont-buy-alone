@@ -1,8 +1,9 @@
 from flask import Flask, render_template, jsonify, request
 from bson.objectid import ObjectId
 from pymongo import MongoClient
+from mongo_info import connect
 
-client = MongoClient('mongodb+srv://mslee:goodzz123@cluster0.vms1u.mongodb.net/?retryWrites=true&w=majority')
+client = MongoClient(connect)
 db = client.dbibla
 
 app = Flask(__name__)

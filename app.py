@@ -23,14 +23,12 @@ def detail():
     query_string = request.args.get('id')
     board = db.board.find_one({ '_id': ObjectId(query_string) })
     reply = db.reply.find({ 'boardId': query_string} )
+
     return render_template('detail.html', board = board, reply = reply, query_string = query_string)
 
 @app.route('/detail/reply', methods=["POST"])
 def reply():
     params = request.get_json()
-    print(params['replyContent'])
-    print(params['date'])
-    print(params['boardId'])
 
     doc = {
       'boardId': params['boardId'],
@@ -40,7 +38,7 @@ def reply():
 
     db.reply.insert_one(doc)
 
-    return jsonify({ 'msg': 'reply upload success', })
+    return jsonify({ 'repliable': True, })
 
 ################################## SIGNIN ##################################
 @app.route('/signin', methods=["GET"])
@@ -93,6 +91,7 @@ def is_in_use_email():
     has_account = False
     if result:
         has_account = True
+        
     return jsonify({ 'hasAccount': has_account })
     
 

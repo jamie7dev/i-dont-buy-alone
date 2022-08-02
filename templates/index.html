@@ -112,7 +112,7 @@
             <a href="/detail?id={{ dbpost._id }}" class="ex-hyper">
                 <div class="col">
                     <div class="card h-100">
-                        <img src="{{ dbpost.src }}" class="card-img-top">
+                        <img src="{{ url_for('static', filename=dbpost.file) }}" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">{{ dbpost.title }}</h5>
                             <p class="card-price" style="text-align: left">{{ dbpost.price }} 원</p>

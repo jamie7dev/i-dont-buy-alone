@@ -1,20 +1,6 @@
 "use strict";
-// name라는 이름과 value라는 값을 가지며 hour시간동안 유지되는 cookie를 생성 됩니다.
-function setCookie(name, value, hour) {
-  const date = new Date();
-  date.setTime(date.getTime() + hour * 60 * 60 *  1000);
-  document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
-}
 
-function getCookie(name) {
-  const value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-  return value ? value[2] : null;
-}
-
-function deleteCookie(name) {
-  const date = new Date();
-  document.cookie = name + "= " + "; expires=" + date.toUTCString() + "; path=/";
-}
+import { setCookie } from "./cookie.js";
 
 async function submitSignIn() {
   const errorMsg = document.getElementById('error-msg');
@@ -38,6 +24,8 @@ async function submitSignIn() {
 
   if (result.result === 'success') {
     setCookie('mytoken', result.token, 1);
+    localStorage.setItem('accountEmail', email.value);
+    localStorage.setItem('nickname', result.nickname);
     window.location.href = '/';
   } else {
     errorMsg.innerHTML = '계정 정보가 일치하지 않습니다.';

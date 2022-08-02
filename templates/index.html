@@ -13,15 +13,25 @@
         integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
         crossorigin="anonymous"></script>
     <!-- Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>나혼자안산다</title>
     <style>
+        body {
+          font-family: 'Do Hyeon', sans-serif;
+        }
+        .card-body { 
+            background-color: whitesmoke; 
+            box-shadow: 3px 3px 3px #999; 
+            border-radius: 20px; 
+        }
+        
         .btn {
             padding: .55rem 1.5rem .45rem;
         }
 
-        .ex-hyper {
+        .ex-hyper:hover {
             text-decoration: none;
             color: black;
         }
@@ -31,7 +41,7 @@
             color: black;
         }
 
-        .a {
+        a {
             text-decoration: none;
             color: black;
         }
@@ -67,6 +77,12 @@
             vertical-align: middle;
             text-align: center;
         }
+        .card-img-top {
+            width: 100%;
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
     </style>
     <script>
         function search() {
@@ -82,8 +98,7 @@
                 data: {},
                 success: function (response) {
                     alert("성공")
-                    window.location.href = "../search/?title_give=" + word
-
+                    window.location.href = "/search/?title_give=" + word
                 }
             });
         }
@@ -94,7 +109,7 @@
     <!-- Nav Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-success">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/" style="color: white;">Navbar</a>
+            <a class="navbar-brand" href="/" style="color: white;">나 혼자 "안" 산다💪</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -130,16 +145,16 @@
     <!-- product list -->
     <div class="mycards">
         <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
-            {% for dbpost in dbposts %}
-            <a href="/detail?id={{ dbpost._id }}" class="ex-hyper">
+            {% for board in boards %}
+            <a href="/detail?id={{ board._id }}" class="ex-hyper">
                 <div class="col">
                     <div class="card h-100">
-                        <img src="{{ dbpost.src }}" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ dbpost.title }}</h5>
-                            <p class="card-price" style="text-align: left">{{ dbpost.price }} 원</p>
-                            <p class="number" style="text-align: right">{{ dbpost.participant }}:공동구매자</p>
-                            <p class="mydate" style="text-align: right">{{ dbpost.date }}</p>
+                        <div class="card-img-top" style="background-image: url('{{ url_for('static', filename=board.file) }}');"></div>
+                        <div class="card-body" style="background-color: whitesmoke;">
+                            <h5 class="card-title">{{ board.title }}</h5>
+                            <p class="card-price" style="text-align: left">{{ board.price }} 원</p>
+                            <p class="number" style="text-align: right">{{ board.participant }}명이 필요해요💚</p>
+                            <p class="mydate" style="text-align: right">{{ board.date }}</p>
                         </div>
                     </div>
                 </div>

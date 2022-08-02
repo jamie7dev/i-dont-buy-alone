@@ -14,30 +14,42 @@ app = Flask(__name__)
 SECRET_KEY = 'team7'
 
 ######Lee1231234 make here######
+def auth_cookie():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+    except jwt.ExpiredSignatureError:
+        return True
+    except jwt.exceptions.DecodeError:
+        return True
+
 ##전체 인덱스 찾기
 @app.route('/', methods=['GET'])
 def view_index():
     # 인덱스 형성
-    dbposts = list(db.board.find({}))
+    boards = list(db.board.find({}))
     category = list(db.category.find({}, {'_id': False}))
 
-    return render_template("index.html", dbposts=dbposts, category=category)
+    return render_template("index.html", boards=boards, category=category)
 ##카테고리 인덱스만 찾기
 @app.route('/<keyword>')
 def find_index(keyword):
     if keyword.isdigit():
-        dbposts = list(db.board.find({}))
+        boards = list(db.board.find({}))
     else:
-        dbposts = list(db.board.find({"category": keyword}))
+        boards = list(db.board.find({"category": keyword}))
+
     category = list(db.category.find({}, {'_id': False}))
-    return render_template("index.html", dbposts=dbposts, category=category)
+    return render_template("index.html", boards=boards, category=category)
 
 @app.route('/search/', methods=['GET'])
 def search_index():
     title_receive = request.args.get('title_give')
-    dbposts=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
+    boards=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
     category = list(db.category.find({}, {'_id': False}))
-    return render_template("index.html",dbposts=dbposts, category=category)
+    return render_template("index.html",boards=boards, category=category)
 ######Lee1231234 make end######
 
 ################################## DETAIL ##################################
@@ -124,13 +136,17 @@ def is_in_use_email():
 
     return jsonify({ 'hasAccount': has_account })
 
-########################### 업로드 ###########################     
+########################### 업로드 ####################################################     
 @app.route('/upload', methods=['GET'])
 def upload():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
     return render_template('upload.html')
 
 @app.route('/upload', methods=['POST'])
 def save_upload():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     category_receive = request.form['category_give']
@@ -142,24 +158,25 @@ def save_upload():
     extension = file.filename.split('.')[-1]
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-
+    mytime2= today.strftime('%m월 %d일 %H시 %M분')
     filename = f'file-{mytime}'
 
     save_to = f'static/{filename}.{extension}'
     file.save(save_to)
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
+    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
     doc = {
         'title': title_receive,
         'content': content_receive,
         'category': category_receive,
         'price': price_receive,
-        'num': num_receive,
+        'participant': num_receive,
         'file': f'{filename}.{extension}'
     }
 
-    db.upload.insert_one(doc)
-
-    print(num_receive)
+    db.board.insert_one(doc)
 
     return jsonify({'msg': ' 작성 완료!'})
 

@@ -1,169 +1,163 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
-
-    <title> 나혼자안산다 | 공동구매 </title>
-
-    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-
-    <style>
-
-        * {
-            font-family: 'Jua', sans-serif;
-        }
-
-        .posting-box {
-            width: 500px;
-            margin-top: 20px;
-
-
-        }
-
-        .wrap {
-            width: 600px;
-            margin: auto;
-        }
-
-        .container {
-            padding-left: 50px;
-
-        }
-
-        .posting-box > .custom-file {
-            margin-bottom: 50px;
-        }
-
-        .jumbotron {
-            background-color: beige;
-            background-size: 100%;
-        }
-    </style>
-
-    <script>
-        function posting() {
-
-            let title = $('#title').val()
-            let content = $("#content").val()
-            let category = $("#category").val()
-            let price = $("#price").val()
-            let num = $("#num").val()
-            let file = $('#file')[0].files[0]
-            let form_data = new FormData()
-
-            form_data.append("file_give", file)
-            form_data.append("title_give", title)
-            form_data.append("content_give", content)
-            form_data.append("category_give", category)
-            form_data.append("price_give", price)
-            form_data.append("num_give", num)
-
-            console.log(num)
-
-            $.ajax({
-                type: "POST",
-                url: "/upload",
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alert(response["msg"])
-                    window.location.reload()
-                }
-            });
-        }
-
-    </script>
-</head>
-
-<body>
-
-
-<div class="wrap">
-
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <div class="btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn- warning">
-                    <input type="button" value="⇐뒤로가기" onClick="history.go(-1)">
-                </label>
-            </div>
-            가치있는
-            <h1> 공동구매 글쓰기 </h1>
-            <div class="posting-box">
-                {#                <div class="custom-file">#}
-                {#                    <input type="file" class="custom-file-input" id="file">#}
-                {#                    <label class="custom-file-label" for="file"> </label>#}
-                {#                </div>#}
-                <form>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+    
+        <title> 나혼자안산다 | 공동구매 </title>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+    
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    
+        <style>
+    
+            * {
+                font-family: 'Jua', sans-serif;
+            }
+    
+            .posting-box {
+                width: 500px;
+                margin-top: 20px;
+    
+    
+            }
+    
+            .wrap {
+                width: 600px;
+                margin: auto;
+            }
+    
+            .container {
+                padding-left: 50px;
+    
+            }
+    
+            .posting-box > .custom-file {
+                margin-bottom: 50px;
+            }
+    
+            .jumbotron {
+                background-color: beige;
+                background-size: 100%;
+            }
+        </style>
+    
+        <script>
+            function posting() {
+    
+                let title = $('#title').val()
+                let content = $("#content").val()
+                let category = $("#category").val()
+                let price = $("#price").val()
+                let num = $("#num").val()
+                let file = $('#file')[0].files[0]
+                let form_data = new FormData()
+    
+                form_data.append("file_give", file)
+                form_data.append("title_give", title)
+                form_data.append("content_give", content)
+                form_data.append("category_give", category)
+                form_data.append("price_give", price)
+                form_data.append("num_give", num)
+    
+                $.ajax({
+                    type: "POST",
+                    url: "/upload",
+                    data: form_data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        alert(response["msg"])
+                        window.location.reload()
+                    }
+                });
+            }
+    
+        </script>
+    </head>
+    
+    <body>
+    
+    
+    <div class="wrap">
+    
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <div class="btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn- warning">
+                        <input type="button" value="⇐뒤로가기" onClick="history.go(-1)">
+                    </label>
+                </div>
+                가치있는
+                <h1> 공동구매 글쓰기 </h1>
+                <div class="posting-box">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleFormControlFile1">사진</label>
+                            <input type="file" class="form-control-file" id="file">
+                        </div>
+                    </form>
                     <div class="form-group">
-                        <label for="exampleFormControlFile1">사진</label>
-                        <input type="file" class="form-control-file" id="file">
+    
+                        <input type="email" class="form-control" id="title" placeholder="제목">
                     </div>
-                </form>
-                <div class="form-group">
-
-                    <input type="email" class="form-control" id="title" placeholder="제목">
-                </div>
-                <div class="form-group">
-
-                    <textarea class="form-control" id="content" rows="3"
-                              placeholder="타인에게 상처가 되는 말은 삭제 처리가 될 수 있습니다."></textarea>
-                </div>
-
-                <select class="custom-select" id="category">
-                    <option selected>카테고리 선택</option>
-                    <option value="1">같이 싸게 사요</option>
-                    <option value="2">나눠 먹어요</option>
-                    <option value="3">반반 나눠요</option>
-                    <option value="4">한입만</option>
-                </select>
-
-                <input class="form-control" type="text" placeholder="￦ 가격" id="price">
-
-                <div class="form-group" >
-                    <label for="exampleFormControlSelect1">모집 인원수</label>
-                    <select class="form-control" id="num">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
+                    <div class="form-group">
+    
+                        <textarea class="form-control" id="content" rows="3"
+                                  placeholder="타인에게 상처가 되는 말은 삭제 처리가 될 수 있습니다."></textarea>
+                    </div>
+    
+                    <select class="custom-select" id="category">
+                        <option selected>카테고리 선택</option>
+                        <option value="생활-식료품">생활-식료품</option>
+                        <option value="OTT">OTT</option>
+                        <option value="대중교통">대중교통</option>
+                        <option value="기타">기타</option>
                     </select>
+    
+                    <input class="form-control" type="text" placeholder="￦ 가격" id="price">
+    
+                    <div class="form-group" >
+                        <label for="exampleFormControlSelect1">모집 인원수</label>
+                        <select class="form-control" id="num">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                        </select>
+                    </div>
+    
+    
+                    <button onclick="posting()" type="button" class="btn btn-primary">저장하기</button>
                 </div>
-
-
-                <button onclick="posting()" type="button" class="btn btn-primary">저장하기</button>
             </div>
         </div>
+        <div class="card-columns" id="cards-box">
+    
+    
+        </div>
     </div>
-    <div class="card-columns" id="cards-box">
-
-
-    </div>
-</div>
-
-</body>
-
-</html>
+    
+    </body>
+    
+    </html>

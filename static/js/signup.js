@@ -17,9 +17,10 @@ function allAreEqual(obj) {
 async function submitSignup() {
   const URL = '/signup';
   const email = document.getElementById('email');
-  const nickname = document.getElementById('nickname');
   const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirm-password');
+  const nickname = document.getElementById('nickname');
+  const phone = document.getElementById('phone');
   const isValidInput = {
     email: (!isEmpty(email.value)) && isValidEmail(email.value),
     nickname: !isEmpty(nickname),
@@ -37,6 +38,7 @@ async function submitSignup() {
         'accountEmail': email.value,
         'nickname': nickname.value,
         'pw': password.value,
+        'phone': phone.value,
       }),
     }
   
@@ -67,7 +69,7 @@ async function isInUseEmail(event) {
 
 async function isValidInputEmail(event) {
   let isValidEmailForm = isValidEmail(event.target.value);
-  const msgEmail = document.querySelector('.msg.email');
+  const helpEmail = document.getElementById('help-email');
   const red = 'rgba(255 0 0)';
   const green = 'rgba(0 128 0)';
   const colors = [red, green];
@@ -75,22 +77,22 @@ async function isValidInputEmail(event) {
 
   let result = await isInUseEmail(event);
 
-  msgEmail.innerHTML = msgs[Number(isValidEmailForm) + Number(result.hasAccount)];
-  msgEmail.style.color = colors[Number(isValidEmailForm) - Number(result.hasAccount)];
+  helpEmail.innerHTML = msgs[Number(isValidEmailForm) + Number(result.hasAccount)];
+  helpEmail.style.color = colors[Number(isValidEmailForm) - Number(result.hasAccount)];
 }
 
 function isSamePassword() {
   const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirm-password');
-  const msgConfirmPassword = document.querySelector('.msg.confirm-password');
+  const helpConfirmPassword = document.getElementById('help-confirm-password');
   const red = 'rgba(255 0 0)';
   const green = 'rgba(0 128 0)';
   const colors = [red, green];
   const msgs = ['비밀번호가 일치하지 않습니다.', '비밀번호가 일치합니다.'];
   let isSame = password.value === confirmPassword.value;
 
-  msgConfirmPassword.innerHTML = msgs[Number(!isSame)];
-  msgConfirmPassword.style.color = colors[Number(!isSame)];
+  helpConfirmPassword.innerHTML = msgs[Number(isSame)];
+  helpConfirmPassword.style.color = colors[Number(isSame)];
 }
 
 function main() {
@@ -98,9 +100,9 @@ function main() {
   const email = document.getElementById('email');
   const confirmPassword = document.getElementById('confirm-password');
 
-  signupBtn.addEventListener('click', submitSignup);
   email.addEventListener('keyup', isValidInputEmail);
   confirmPassword.addEventListener('keyup', isSamePassword);
+  signupBtn.addEventListener('click', submitSignup);
 }
 
 main();

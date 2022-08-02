@@ -50,6 +50,7 @@ def reply():
 
 ######Lee1231234 make here######
 ##카테고리 인덱스만 찾기
+
 @app.route('/index/<keyword>')
 def find_index(keyword):
     if keyword.isdigit():

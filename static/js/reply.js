@@ -16,6 +16,8 @@ async function replySubmit() {
     },
     body: JSON.stringify({
       boardId: boardId,
+      accountEmail: localStorage.getItem('accountEmail'),
+      nickname: localStorage.getItem('nickname'),
       replyContent: formReply.value,
       date: dateToYYYYMMDDHHMMSS(),
     }),

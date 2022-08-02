@@ -23,15 +23,15 @@
     </header>
     <article style="margin-top: 50px;">
         <div class="container">
-
-            <div class="detail-pic my-4" style="background-image: url('https://placeimg.com/640/380/tech');"></div>
+            
+            <div class="detail-pic my-4" style="background-image: url('{{ url_for('static', filename=board.file) }}');"></div>
             <div>
               <h5></h5>
               <hr>
               <h5 class="title">{{ board['title'] }}</h5>
               <p class="date">{{ board['date'] }}</p>
-              <p class="participant">{{ board['participant'] }}</p>
-              <p class="price">{{ board['price'] }}</p>
+              <p class="participant">{{ board['participant'] }}명이 필요해요💚</p>
+              <p class="price">{{ board['price'] }}원</p>
             </div>
         </div>
     </article>

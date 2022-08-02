@@ -79,9 +79,15 @@
             text-align: center;
         }
 
-        .btn-secondary {
-            color: turquoise;
+
+
+        .card-img-top {
+            width: 100%;
+            height: 150px;
+            background-size: cover;
+            background-position: center;
         }
+    </style>
     </style>
     <script>
         function search() {
@@ -112,7 +118,8 @@
             <a href="/detail?id={{ dbpost._id }}" class="ex-hyper">
                 <div class="col">
                     <div class="card h-100">
-                        <img src="{{ url_for('static', filename=dbpost.file) }}" class="card-img-top">
+                         <div class="card-img-top" style="background-image: url('{{ url_for('static', filename=dbpost.file) }}');"></div>
+
                         <div class="card-body">
                             <h5 class="card-title">{{ dbpost.title }}</h5>
                             <p class="card-price" style="text-align: left">{{ dbpost.price }} 원</p>

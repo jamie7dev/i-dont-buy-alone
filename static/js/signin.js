@@ -21,8 +21,9 @@ async function submitSignIn() {
 
   let response = await fetch(URL, options).catch(error => console.log(error));
   let result = await response.json().catch(error => console.log(error));
+  console.log(result);
 
-  if (result.result === 'success') {
+  if (result.result) {
     setCookie('mytoken', result.token, 1);
     localStorage.setItem('accountEmail', email.value);
     localStorage.setItem('nickname', result.nickname);

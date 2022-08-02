@@ -7,8 +7,6 @@ import datetime, jwt, hashlib, json
 client = MongoClient(connect)
 db = client.dbibla
 
-# db.account.delete_many({})
-
 app = Flask(__name__)
 
 SECRET_KEY = 'team7'

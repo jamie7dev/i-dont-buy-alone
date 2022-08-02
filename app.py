@@ -18,7 +18,7 @@ app = Flask(__name__)
 def home():
     dbposts = list(db.board.find({}))
     category = list(db.category.find({}, {'_id': False}))
-    print(dbposts)
+
     return render_template("post.html", dbposts=dbposts, category=category)
 
 
@@ -33,9 +33,7 @@ def detail():
 @app.route('/detail/reply', methods=["POST"])
 def reply():
     params = request.get_json()
-    print(params['replyContent'])
-    print(params['date'])
-    print(params['boardId'])
+
 
     doc = {
         'boardId': params['boardId'],
@@ -67,9 +65,15 @@ def view_index():
     # 인덱스 형성
     dbposts = list(db.board.find({}))
     category = list(db.category.find({}, {'_id': False}))
-    print(dbposts)
+
     return render_template("post.html", dbposts=dbposts, category=category)
 
+@app.route('/search/', methods=['GET'])
+def search_index():
+    title_receive = request.args.get('title_give')
+    dbposts=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
+    category = list(db.category.find({}, {'_id': False}))
+    return render_template("post.html",dbposts=dbposts, category=category)
 
 ######Lee1231234 make end######
 

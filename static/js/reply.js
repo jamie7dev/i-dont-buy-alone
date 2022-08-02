@@ -23,7 +23,8 @@ async function replySubmit() {
 
   let response = await fetch(URL, options).catch(error => console.log(error));
   let result = await response.json().catch(error => console.log(error));
-  console.log(result);
+
+  result.repliable ? window.location.reload() : alert('댓글을 달 수 없습니다.');
 }
 
 function main() {

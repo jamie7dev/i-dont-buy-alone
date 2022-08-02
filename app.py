@@ -2,7 +2,9 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for
 from bson.objectid import ObjectId
 from pymongo import MongoClient
 from mongo_info import connect
-import datetime, jwt, hashlib, json
+import jwt, hashlib, json
+from datetime import datetime
+from datetime import timedelta
 
 client = MongoClient(connect)
 db = client.dbibla
@@ -57,22 +59,20 @@ def confirm_signin():
       'pw': pw_hash
      })
 
-    # print(account['nickname'])
-
     if account is not None:
         payload = {
           'accountEmail': params['accountEmail'],
-          'expire': json.dumps(datetime.datetime.utcnow() + datetime.timedelta(seconds = 60 * 60), default=str)
+          'expire': json.dumps(datetime.utcnow() + timedelta(seconds = 60 * 60), default=str)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
 
         return jsonify({
-          'result': 'success', 
+          'result': True, 
           'token': token, 
           'nickname': account['nickname']
           })
     else: 
-        return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
+        return jsonify({'result': False, 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 ################################## SIGNUP ##################################
 @app.route('/signup', methods=["GET"])
@@ -102,7 +102,73 @@ def is_in_use_email():
         has_account = True
 
     return jsonify({ 'hasAccount': has_account })
-    
+
+########################### 업로드 ###########################     
+@app.route('/upload', methods=['GET'])
+def upload():
+    return render_template('upload.html')
+
+@app.route('/upload', methods=['POST'])
+def save_upload():
+    title_receive = request.form['title_give']
+    content_receive = request.form['content_give']
+    category_receive = request.form['category_give']
+    price_receive = request.form['price_give']
+    num_receive = request.form['num_give']
+
+    file = request.files["file_give"]
+
+    extension = file.filename.split('.')[-1]
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+
+    filename = f'file-{mytime}'
+
+    save_to = f'static/{filename}.{extension}'
+    file.save(save_to)
+
+    doc = {
+        'title': title_receive,
+        'content': content_receive,
+        'category': category_receive,
+        'price': price_receive,
+        'num': num_receive,
+        'file': f'{filename}.{extension}'
+    }
+
+    db.upload.insert_one(doc)
+
+    print(num_receive)
+
+    return jsonify({'msg': ' 작성 완료!'})
+
+@app.route('/index/<keyword>')
+def find_index(keyword):
+    if keyword.isdigit():
+        dbposts = list(db.board.find({}))
+    else:
+        dbposts = list(db.board.find({"category": keyword}))
+    category = list(db.category.find({}, {'_id': False}))
+    return render_template("index.html", dbposts=dbposts, category=category)
+
+######Lee1231234 make here######
+##카테고리 인덱스만 찾기
+##전체 인덱스 찾기
+@app.route('/index/', methods=['GET'])
+def view_index():
+    # 인덱스 형성
+    dbposts = list(db.board.find({}))
+    category = list(db.category.find({}, {'_id': False}))
+
+    return render_template("index.html", dbposts=dbposts, category=category)
+
+@app.route('/search/', methods=['GET'])
+def search_index():
+    title_receive = request.args.get('title_give')
+    dbposts=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
+    category = list(db.category.find({}, {'_id': False}))
+    return render_template("index.html",dbposts=dbposts, category=category)
+######Lee1231234 make end######
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000, debug = True)

@@ -119,8 +119,8 @@
                             </ul>
                         </li>
                     </ul>
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-light" type="submit" style="color: white;">Search</button>
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search">
+                    <button class="btn btn-outline-light" id="search-btn" type="submit" style="color: white;">Search</button>
                 </form>
             </div>
         </div>
@@ -148,6 +148,7 @@
         </div>
     </div>
     <!-- product list -->
+    <script type="module" src="{{ url_for('static', filename='js/index.js') }}" defer> </script>
 
 </body>
 

@@ -1,5 +1,18 @@
 "use strict";
 
+function isValidPassword(event) {
+  const helpPassword = document.getElementById('help-password');
+  const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+  const enable = regExp.test(event.target.value);
+  const red = 'rgba(255 0 0)';
+  const green = 'rgba(0 128 0)';
+  const colors = [red, green];
+  const msgs = ['유효하지 않은 비밀번호입니다.', '멋진 비밀번호네요!'];
+
+  helpPassword.innerHTML = msgs[Number(enable)];
+  helpPassword.style.color = colors[Number(enable)];
+}
+
 function isEmpty(str) {
   return (typeof str === 'undefined') || (str === null) || (str === '');
 }
@@ -81,6 +94,7 @@ async function isValidInputEmail(event) {
   helpEmail.style.color = colors[Number(isValidEmailForm) - Number(result.hasAccount)];
 }
 
+
 function isSamePassword() {
   const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirm-password');
@@ -98,9 +112,11 @@ function isSamePassword() {
 function main() {
   const signupBtn = document.getElementById('signup');
   const email = document.getElementById('email');
+  const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirm-password');
 
   email.addEventListener('keyup', isValidInputEmail);
+  password.addEventListener('keyup', isValidPassword);
   confirmPassword.addEventListener('keyup', isSamePassword);
   signupBtn.addEventListener('click', submitSignup);
 }

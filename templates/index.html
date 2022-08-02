@@ -1,29 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Title</title>
 </head>
-
 <body>
-    <div class="container mt-3">
-        <div class="product">
-            {% for data in board %}
-            <div class="thumbnail" style="background-image: url('https://via.placeholder.com/350')"></div>
-            <div class="flex-grow-1 p-4">
-                <a href="{{ 'detail?id=%s'%data['_id'] }}">
-                    <h5 class="title">{{ data['title'] }}</h5>
-                </a>
-                <p class="date">{{ data['date'] }}</p>
-                <p class="price">{{ data['price'] }}</p>
-                <p class="participant">{{ data['participant'] }}</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</body>
 
+<p>페이지가 잘 나오면 로그인 성공!!!</p>
+
+</body>
 </html>

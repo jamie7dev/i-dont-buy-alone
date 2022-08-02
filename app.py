@@ -13,11 +13,32 @@ app = Flask(__name__)
 
 SECRET_KEY = 'team7'
 
-################################## ROOT ##################################
-@app.route('/', methods=["GET"])
-def home():
-    board = list(db.board.find({},))
-    return render_template('index.html', board = board)
+######Lee1231234 make here######
+##전체 인덱스 찾기
+@app.route('/', methods=['GET'])
+def view_index():
+    # 인덱스 형성
+    dbposts = list(db.board.find({}))
+    category = list(db.category.find({}, {'_id': False}))
+
+    return render_template("index.html", dbposts=dbposts, category=category)
+##카테고리 인덱스만 찾기
+@app.route('/<keyword>')
+def find_index(keyword):
+    if keyword.isdigit():
+        dbposts = list(db.board.find({}))
+    else:
+        dbposts = list(db.board.find({"category": keyword}))
+    category = list(db.category.find({}, {'_id': False}))
+    return render_template("index.html", dbposts=dbposts, category=category)
+
+@app.route('/search/', methods=['GET'])
+def search_index():
+    title_receive = request.args.get('title_give')
+    dbposts=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
+    category = list(db.category.find({}, {'_id': False}))
+    return render_template("index.html",dbposts=dbposts, category=category)
+######Lee1231234 make end######
 
 ################################## DETAIL ##################################
 @app.route('/detail', methods=["GET"])
@@ -141,34 +162,6 @@ def save_upload():
     print(num_receive)
 
     return jsonify({'msg': ' 작성 완료!'})
-
-@app.route('/index/<keyword>')
-def find_index(keyword):
-    if keyword.isdigit():
-        dbposts = list(db.board.find({}))
-    else:
-        dbposts = list(db.board.find({"category": keyword}))
-    category = list(db.category.find({}, {'_id': False}))
-    return render_template("index.html", dbposts=dbposts, category=category)
-
-######Lee1231234 make here######
-##카테고리 인덱스만 찾기
-##전체 인덱스 찾기
-@app.route('/index/', methods=['GET'])
-def view_index():
-    # 인덱스 형성
-    dbposts = list(db.board.find({}))
-    category = list(db.category.find({}, {'_id': False}))
-
-    return render_template("index.html", dbposts=dbposts, category=category)
-
-@app.route('/search/', methods=['GET'])
-def search_index():
-    title_receive = request.args.get('title_give')
-    dbposts=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
-    category = list(db.category.find({}, {'_id': False}))
-    return render_template("index.html",dbposts=dbposts, category=category)
-######Lee1231234 make end######
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000, debug = True)

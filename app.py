@@ -32,6 +32,8 @@ def reply():
 
     doc = {
       'boardId': params['boardId'],
+      'accountEmail': params['accountEmail'],
+      'nickname': params['nickname'],
       'replyContent': params['replyContent'],
       'date': params['date'],
     }
@@ -55,6 +57,8 @@ def confirm_signin():
       'pw': pw_hash
      })
 
+    # print(account['nickname'])
+
     if account is not None:
         payload = {
           'accountEmail': params['accountEmail'],
@@ -62,7 +66,11 @@ def confirm_signin():
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
 
-        return jsonify({'result': 'success', 'token': token})
+        return jsonify({
+          'result': 'success', 
+          'token': token, 
+          'nickname': account['nickname']
+          })
     else: 
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
@@ -83,7 +91,8 @@ def confirm_signup():
     db.account.insert_one(account)
     
     return jsonify({ 'msg': True })
-
+    
+################################## 이메일 중복 체크 ##################################
 @app.route('/signup/email', methods=["POST"])
 def is_in_use_email():
     params = request.get_json()
@@ -91,7 +100,7 @@ def is_in_use_email():
     has_account = False
     if result:
         has_account = True
-        
+
     return jsonify({ 'hasAccount': has_account })
     
 

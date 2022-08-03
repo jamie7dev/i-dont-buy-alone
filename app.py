@@ -222,6 +222,7 @@ def delete():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
     id_receive = request.form["delete_id"]
     db.board.delete_one({'_id': ObjectId(id_receive)})
+    db.reply.delete_many({'boardId': id_receive})
     return jsonify({"result": "success", 'msg': 'updated'})
 
 if __name__ == '__main__':

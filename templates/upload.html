@@ -1,163 +1,218 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+<head>
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-                crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-                crossorigin="anonymous"></script>
-    
-        <title> 나혼자안산다 | 공동구매 </title>
-    
-        <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
-    
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-    
-        <style>
-    
-            * {
-                font-family: 'Jua', sans-serif;
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&family=Noto+Sans+KR:wght@400;500&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+
+    <script>
+        function posting() {
+            let nickname = localStorage.getItem('nickname');
+            let accountEmail = localStorage.getItem('accountEmail');
+            let title = $('#title').val()
+            let content = $("#content").val()
+            let category = $("#category").val()
+            let price = $("#price").val()
+            let num = $("#num").val()
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+            if (title == '') {
+                alert("제목을 입력해주세요")
+                return;
             }
-    
-            .posting-box {
-                width: 500px;
-                margin-top: 20px;
-    
-    
+            
+            if (content == '') {
+                alert("내용을 입력해주세요")
+                return;
             }
-    
-            .wrap {
-                width: 600px;
-                margin: auto;
+
+            if (category == '') {
+                alert(" 카테고리를 선택해주세요 ")
+                return;
             }
-    
-            .container {
-                padding-left: 50px;
-    
+
+            if (num == '') {
+                alert("숫자를 입력해주세요")
+                return;
             }
-    
-            .posting-box > .custom-file {
-                margin-bottom: 50px;
+
+            if (file == '' || file == null) {
+                alert("파일을 첨부 해주세요")
+                return;
             }
-    
-            .jumbotron {
-                background-color: beige;
-                background-size: 100%;
-            }
-        </style>
-    
-        <script>
-            function posting() {
-    
-                let title = $('#title').val()
-                let content = $("#content").val()
-                let category = $("#category").val()
-                let price = $("#price").val()
-                let num = $("#num").val()
-                let file = $('#file')[0].files[0]
-                let form_data = new FormData()
-    
-                form_data.append("file_give", file)
-                form_data.append("title_give", title)
-                form_data.append("content_give", content)
-                form_data.append("category_give", category)
-                form_data.append("price_give", price)
-                form_data.append("num_give", num)
-    
-                $.ajax({
-                    type: "POST",
-                    url: "/upload",
-                    data: form_data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        alert(response["msg"])
-                        window.location.reload()
-                    }
-                });
-            }
-    
-        </script>
-    </head>
-    
-    <body>
-    
-    
-    <div class="wrap">
-    
-        <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-                <div class="btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn- warning">
-                        <input type="button" value="⇐뒤로가기" onClick="history.go(-1)">
-                    </label>
-                </div>
-                가치있는
-                <h1> 공동구매 글쓰기 </h1>
-                <div class="posting-box">
-                    <form>
-                        <div class="form-group">
-                            <label for="exampleFormControlFile1">사진</label>
-                            <input type="file" class="form-control-file" id="file">
-                        </div>
-                    </form>
-                    <div class="form-group">
-    
-                        <input type="email" class="form-control" id="title" placeholder="제목">
-                    </div>
-                    <div class="form-group">
-    
-                        <textarea class="form-control" id="content" rows="3"
-                                  placeholder="타인에게 상처가 되는 말은 삭제 처리가 될 수 있습니다."></textarea>
-                    </div>
-    
-                    <select class="custom-select" id="category">
-                        <option selected>카테고리 선택</option>
-                        <option value="생활-식료품">생활-식료품</option>
-                        <option value="OTT">OTT</option>
-                        <option value="대중교통">대중교통</option>
-                        <option value="기타">기타</option>
-                    </select>
-    
-                    <input class="form-control" type="text" placeholder="￦ 가격" id="price">
-    
-                    <div class="form-group" >
-                        <label for="exampleFormControlSelect1">모집 인원수</label>
-                        <select class="form-control" id="num">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                        </select>
-                    </div>
-    
-    
-                    <button onclick="posting()" type="button" class="btn btn-primary">저장하기</button>
-                </div>
-            </div>
-        </div>
-        <div class="card-columns" id="cards-box">
-    
-    
-        </div>
+
+            form_data.append("file_give", file)
+            form_data.append("title_give", title)
+            form_data.append("content_give", content)
+            form_data.append("category_give", category)
+            form_data.append("price_give", price)
+            form_data.append("num_give", num)
+            form_data.append('nickname', nickname);
+            form_data.append('boardEmail', accountEmail);
+
+            console.log(num)
+
+            $.ajax({
+                type: "POST",
+                url: "/upload",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    window.location.href = '/'
+                }
+            });
+        }
+
+    </script>
+
+
+    <style>
+        body {
+            background-color: white;
+            min-height: 100vh;
+        }
+
+        .section {
+            padding: 1rem 1.5rem;
+            max-width: 750px;
+            margin: 20px auto 0 auto;
+
+        }
+
+        .title {
+            font-weight: 600;
+            font-size: 5rem;
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .subtitle {
+            font-size: 2rem;
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+
+        .box {
+            background-color: whitesmoke;
+        }
+
+        .is-sparta {
+            color: rgba(30 126 94) !important;
+        }
+
+        .button.is-sparta {
+            background-color: rgba(30 126 94);
+            border-color: transparent;
+            color: #fff !important;
+        }
+
+        .button.is-sparta.is-outlined {
+            background-color: transparent;
+            border-color: rgba(30 126 94);
+            color: rgba(30 126 94) !important;
+        }
+
+        .custom-select {
+            width: 450px;
+        }
+
+        select option[value=""][disabled] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<section class="hero is-white">
+    <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
+        <h1 class="title is-sparta"></h1>
+        <h4 class="subtitle is-sparta">같이 가치를 나눠요! 💻</h4>
+
     </div>
-    
-    </body>
-    
-    </html>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="box" style="max-width: 480px;margin:auto">
+            <article class="media">
+                <div class="media-content">
+                    <div class="content">
+
+
+                        <input id="title" class="input" type="title" placeholder="제목">
+                        <br>
+                        <br>
+                        <textarea class="textarea" id="content" placeholder="타인에게 상처가 되는 말은 삭제 처리가 될 수 있습니다"></textarea>
+                        <br>
+                        <div class="select is-normal">
+                            <select class="custom-select" id="category">
+                                <option selected>카테고리 선택</option>
+                                <option value="생활-식료품">생활-식료품</option>
+                                <option value="OTT">OTT</option>
+                                <option value="대중교통">대중교통</option>
+                                <option value="기타">기타</option>
+                            </select>
+                        </div>
+                        <br>
+                        <br>
+                        <input id="price" class="input" type="title" placeholder="가격">
+                        <br>
+                        <br>
+                        <div class="select is-normal">
+                            <select class="custom-select" id="num">
+                                <option value="" disabled selected>모집 인원수</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1"></label>
+                        <input type="file" class="form-control-file" id="file">
+                    </div>
+                    </form>
+
+                </div>
+            </article>
+            <br>
+            <nav class="level is-mobile">
+                <button class="level-item button is-sparta is-outlined" onclick="location.href='/index'">
+                    뒤로가기
+                </button>
+                <button class="level-item button is-sparta" onclick="posting()">
+                    저장하기
+                </button>
+
+            </nav>
+        </div>
+
+    </div>
+
+
+    </div>
+</section>
+
+</body>
+</html>

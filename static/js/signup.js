@@ -31,7 +31,7 @@ function allAreEqual(obj) {
 
 async function submitSignup() {
   const URL = '/signup';
-  const accountImg = '';
+  const profileImg = 'anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpeg';
   const email = document.getElementById('email');
   const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirm-password');
@@ -55,7 +55,7 @@ async function submitSignup() {
         'nickname': nickname.value,
         'pw': password.value,
         'phone': phone.value,
-        'accountImg': accountImg,
+        'profileImg': profileImg,
       }),
     }
   

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sign.css') }}">
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <section class="hero is-white">
+        <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
+            <h1 class="title is-sparta"></h1>
+            <h4 class="subtitle is-sparta">같이 나눠요, {{ account['nickname'] }}님!</h4>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="box" style="max-width: 480px;margin:auto">
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p id="email" class="input">이메일: {{ account['accountEmail'] }}</p>
+                            <p id="nickname" class="input">닉네임: {{ account['nickname'] }}</p>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+            </div>
+            </article>
+            <br>
+            <nav class="level is-mobile">
+                <button class="level-item button is-sparta is-outlined" onclick="location.href='/'">
+                    홈으로 이동하기
+                </button>
+                <button class="level-item button is-sparta" id="signout">
+                    로그아웃
+                </button>
+            </nav>
+        </div>
+        </div>
+        </div>
+    </section>
+    <script type="module" src="{{ url_for('static', filename='js/profile.js') }}" defer> </script>
+</body>
+
+</html>

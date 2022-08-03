@@ -27,6 +27,7 @@ async function submitSignIn() {
     setCookie('mytoken', result.token, 1);
     localStorage.setItem('accountEmail', email.value);
     localStorage.setItem('nickname', result.nickname);
+    localStorage.setItem('profileImg', result.profileImg);
     window.location.href = '/';
   } else {
     errorMsg.innerHTML = '계정 정보가 일치하지 않습니다.';

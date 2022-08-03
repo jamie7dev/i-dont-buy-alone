@@ -88,7 +88,7 @@ def detail():
 
     query_string = request.args.get('id')
     board = db.board.find_one({ '_id': ObjectId(query_string) })
-    reply = db.reply.find({ 'boardId': query_string} )
+    reply = list(db.reply.find({ 'boardId': query_string} ))
 
     return render_template('detail.html', board = board, reply = reply, query_string = query_string)
 
@@ -133,6 +133,7 @@ def reply():
       'boardId': params['boardId'],
       'accountEmail': params['accountEmail'],
       'nickname': params['nickname'],
+      'profileImg': params['profileImg'],
       'replyContent': params['replyContent'],
       'date': params['date'],
     }
@@ -172,7 +173,8 @@ def confirm_signin():
         return jsonify({
           'result': True, 
           'token': token, 
-          'nickname': account['nickname']
+          'nickname': account['nickname'],
+          'profileImg': account['profileImg']
           })
     else: 
         return jsonify({'result': False, 'msg': '아이디/비밀번호가 일치하지 않습니다.'})

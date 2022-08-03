@@ -18,6 +18,7 @@ async function replySubmit() {
       boardId: boardId,
       accountEmail: localStorage.getItem('accountEmail'),
       nickname: localStorage.getItem('nickname'),
+      profileImg: localStorage.getItem('profileImg'),
       replyContent: formReply.value,
       date: dateToYYYYMMDDHHMMSS(),
     }),

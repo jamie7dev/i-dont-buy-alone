@@ -36,8 +36,12 @@
                 <div class="col">
                     <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item active" aria-current="page"><span style="color: #1E7E5E;">{{
-                                    account.nickname }}</span>님의 프로필</li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <span style="color: #1E7E5E;">
+                                {{account.nickname }}
+                            </span>
+                            님의 프로필
+                            </li>
                         </ol>
                     </nav>
                 </div>
@@ -47,11 +51,13 @@
                 <div class="col-lg-4">
                     <div class="card mb-4">
                         <div class="card-body text-center">
-                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                            <img src="{{ url_for('static', filename=account.profileImg) }}"
                                 alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
                             <h5 class="my-3">{{ account.nickname }}</h5>
-                            <p class="text-muted mb-1">개발자 유망주</p>
-                            <p class="text-muted mb-4">강원도 횡성</p>
+                            <label class="input-file-button" for="input-profile">
+                                +
+                            </label>
+                            <input type="file" accept="image/*" id="input-profile" style="display: none;"/>
                         </div>
                     </div>
                 </div>
@@ -72,7 +78,7 @@
                                     <p class="mb-0">Mobile</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">(098) 765-4321</p>
+                                    <p class="text-muted mb-0">{{ account.phone }}</p>
                                 </div>
                             </div>
                             <hr>

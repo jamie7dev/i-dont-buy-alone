@@ -2,8 +2,8 @@
 
 import { getCookie } from "./cookie.js";
 
-async function getProfile() {
-  console.log('zz');
+function getProfile() {
+  window.location.href = '/profile';
 }
 
 function main() {

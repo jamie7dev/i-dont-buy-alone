@@ -144,7 +144,11 @@ def confirm_signin():
           'accountEmail': params['accountEmail'],
           'expire': json.dumps(datetime.utcnow() + timedelta(seconds = 60 * 60), default=str)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
+        # ec2
+        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256').decode('utf-8')
+
+        # local
+        # token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
 
         return jsonify({
           'result': True, 
@@ -248,5 +252,6 @@ def render_profile():
     boards = list(db.board.find({"boardEmail": payload["accountEmail"]}))
     
     return render_template('profile.html', account=user_info, boards=boards)
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000, debug = True)

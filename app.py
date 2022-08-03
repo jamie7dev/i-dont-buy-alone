@@ -54,7 +54,13 @@ def find_index(keyword):
         boards = list(db.board.find({"category": keyword}))
 
     category = list(db.category.find({}, {'_id': False}))
-    return render_template("index.html", boards=boards, category=category)
+    # 접속 중인 계정 찾기.
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+
+    return render_template("index.html", boards=boards, category=category, account=user_info)
 
 @app.route('/search/', methods=['GET'])
 def search_index():
@@ -64,7 +70,14 @@ def search_index():
     title_receive = request.args.get('title_give')
     boards=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
     category = list(db.category.find({}, {'_id': False}))
-    return render_template("index.html",boards=boards, category=category)
+
+    # 접속 중인 계정 찾기.
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+
+    return render_template("index.html",boards=boards, category=category, account=user_info)
 ######Lee1231234 make end######
 
 ################################## DETAIL ##################################

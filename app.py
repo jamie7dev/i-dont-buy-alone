@@ -17,6 +17,17 @@ app = Flask(__name__)
 SECRET_KEY = 'team7'
 
 ######Lee1231234 make here######
+def count_like(boards):
+    id = []
+    count = []
+    for board in boards:
+        id.append(str(board['_id']))
+    for i in id:
+        count.append(db.like.count_documents({'boardId': i}))
+    doc = {}
+    for i in range(len(id)):
+        doc[id[i]] = count[i]
+    return doc
 def auth_cookie():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -35,10 +46,14 @@ def view_index():
     if auth_cookie():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
     # 인덱스 형성
+
     boards = list(db.board.find({}))
     category = list(db.category.find({}, {'_id': False}))
 
-    return render_template("index.html", boards=boards, category=category)
+
+    doc =count_like(boards)
+
+    return render_template("index.html", boards=boards, category=category,like=doc)
     
 ##카테고리 인덱스만 찾기
 @app.route('/<keyword>')
@@ -52,7 +67,8 @@ def find_index(keyword):
         boards = list(db.board.find({"category": keyword}))
 
     category = list(db.category.find({}, {'_id': False}))
-    return render_template("index.html", boards=boards, category=category)
+    doc = count_like(boards)
+    return render_template("index.html", boards=boards, category=category,like=doc)
 
 @app.route('/search/', methods=['GET'])
 def search_index():
@@ -62,7 +78,8 @@ def search_index():
     title_receive = request.args.get('title_give')
     boards=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
     category = list(db.category.find({}, {'_id': False}))
-    return render_template("index.html",boards=boards, category=category)
+    doc = count_like(boards)
+    return render_template("index.html",boards=boards, category=category,like=doc)
 
 @app.route('/like', methods=['POST'])
 def like():
@@ -96,7 +113,7 @@ def detail():
     reply = db.reply.find({ 'boardId': query_string} )
 
     ##전체 좋아요 갯수와 자신을 들고옴
-    like_count = db.like.count_documents({})
+    like_count = db.like.count_documents({'boardId': query_string})
     like = db.like.find({'boardId': query_string},{'_id': False})
 
     return render_template('detail.html', board = board, reply = reply, query_string = query_string,like=like,like_count=like_count)

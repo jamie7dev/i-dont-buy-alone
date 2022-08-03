@@ -46,7 +46,7 @@ def find_index(keyword):
     if auth_cookie():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
 
-    if keyword.isdigit():
+    if keyword.isdigit() or keyword=="전체":
         boards = list(db.board.find({}))
     else:
         boards = list(db.board.find({"category": keyword}))

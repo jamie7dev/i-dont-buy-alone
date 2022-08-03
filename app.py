@@ -1,12 +1,15 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from bson.objectid import ObjectId
 from pymongo import MongoClient
-from mongo_info import connect
-import jwt, hashlib, json
+
+import jwt, hashlib, json,certifi
 from datetime import datetime
 from datetime import timedelta
 
-client = MongoClient(connect)
+ca = certifi.where()
+
+client = MongoClient('mongodb+srv://lee1231234:lee1231234@cluster0.vms1u.mongodb.net/?retryWrites=true&w=majority',
+                     tlsCAFile=ca)
 db = client.dbibla
 
 app = Flask(__name__)
@@ -24,6 +27,7 @@ def auth_cookie():
         return True
     except jwt.exceptions.DecodeError:
         return True
+    return False
 
 ##전체 인덱스 찾기
 @app.route('/', methods=['GET'])
@@ -95,10 +99,14 @@ def reply():
 ################################## SIGNIN ##################################
 @app.route('/signin', methods=["GET"])
 def render_signin():
+    if auth_cookie()==False:
+        return redirect(url_for("view_index"))
     return render_template('signin.html')
 
 @app.route('/signin', methods=["POST"])
 def confirm_signin():
+    if auth_cookie()==False:
+        return redirect(url_for("view_index"))
     params = request.get_json()
     pw_hash = hashlib.sha256(params['pw'].encode('utf-8')).hexdigest()
 
@@ -125,10 +133,14 @@ def confirm_signin():
 ################################## SIGNUP ##################################
 @app.route('/signup', methods=["GET"])
 def render_signup():
+    if auth_cookie()==False:
+        return redirect(url_for("view_index"))
     return render_template('signup.html')
 
 @app.route('/signup', methods=["POST"])
 def confirm_signup():
+    if auth_cookie()==False:
+        return redirect(url_for("view_index"))
     params = request.get_json()
     account = {
       'accountEmail': params['accountEmail'],
@@ -143,6 +155,8 @@ def confirm_signup():
 ################################## 이메일 중복 체크 ##################################
 @app.route('/signup/email', methods=["POST"])
 def is_in_use_email():
+    if auth_cookie()==False:
+        return redirect(url_for("view_index"))
     params = request.get_json()
     result = db.account.find_one({ 'accountEmail': params['accountEmail'] })
     has_account = False

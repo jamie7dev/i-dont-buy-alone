@@ -41,12 +41,16 @@
             }
         }
         function join(){
-
+            let number='{{ board['participant']|int-like_count|int  }}'
+            console.log(number)
+            if(number==0){
+                alert("이미 마감된 페이지입니다!")
+                return
+            }
             let _id = '{{ board._id }}'
             let user_id = localStorage.getItem("accountEmail")
 
             let like
-            {{ like_count }}
             {% for i in like %}
                 if(user_id=='{{ i.user_id}}'){
                     like=0
@@ -68,15 +72,7 @@
                     }
                 })
         }
-        $(document).ready(function(){
-            let tmp;
-            if('{{ board['participant']|int-like_count|int }}'=='0'){
-                tmp ="마감완료 💚"
-            }else{
-            tmp = "{{ board['participant']|int-like_count|int }}명이 필요해요 💚"
-            }
-            $('#partiocipant').append(tmp)
-        })
+
 
 
     </script>
@@ -102,7 +98,14 @@
               <h5 class="title">{{ board['title'] }}</h5>
               <p class="uploader">작성자: {{ board['nickname'] }}</p>
               <p class="date">{{ board['date'] }}</p>
-              <p class="participant" id="partiocipant"></p>
+              <p class="participant" id="partiocipant" value={{ board['participant']|int-like_count|int }}>
+                  {% if board['participant']|int-like_count|int == 0 %}
+                      "마감완료 💚"
+                  {% else %}
+                      {{ board['participant']|int-like_count|int }}명이 필요해요 💚
+                  {% endif %}
+
+              </p>
               <p class="price">{{ board['price'] }}원</p>
                 <button id="erase" onclick="erase()">삭제버튼</button>
                 <a href="#" onclick="join()"; >참가하기</a>

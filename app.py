@@ -152,6 +152,8 @@ def save_upload():
     category_receive = request.form['category_give']
     price_receive = request.form['price_give']
     num_receive = request.form['num_give']
+    nickname_receive = request.form['nickname']
+    boardEmail_receive = request.form['boardEmail']
 
     file = request.files["file_give"]
 
@@ -168,12 +170,15 @@ def save_upload():
 
     user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
     doc = {
+        'boardEmail': boardEmail_receive,
+        'nickname': nickname_receive,
         'title': title_receive,
         'content': content_receive,
         'category': category_receive,
         'price': price_receive,
         'participant': num_receive,
-        'file': f'{filename}.{extension}'
+        'file': f'{filename}.{extension}',
+        'date': mytime2,
     }
 
     db.board.insert_one(doc)

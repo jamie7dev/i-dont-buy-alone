@@ -46,7 +46,7 @@ def find_index(keyword):
     if auth_cookie():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
 
-    if keyword.isdigit() or keyword=="전체":
+    if keyword.isdigit() :
         boards = list(db.board.find({}))
     else:
         boards = list(db.board.find({"category": keyword}))
@@ -216,6 +216,13 @@ def save_upload():
 
     return jsonify({'msg': ' 작성 완료!'})
 
+@app.route('/delete', methods=['POST'])
+def delete():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+    id_receive = request.form["delete_id"]
+    db.board.delete_one({'_id': ObjectId(id_receive)})
+    return jsonify({"result": "success", 'msg': 'updated'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000, debug = True)

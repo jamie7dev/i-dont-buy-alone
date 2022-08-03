@@ -21,12 +21,12 @@
         body {
           font-family: 'Do Hyeon', sans-serif;
         }
-        .card-body { 
-            background-color: whitesmoke; 
-            box-shadow: 3px 3px 3px #999; 
-            border-radius: 20px; 
+        .card-body {
+            background-color: whitesmoke;
+            box-shadow: 3px 3px 3px #999;
+            border-radius: 20px;
         }
-        
+
         .btn {
             padding: .55rem 1.5rem .45rem;
         }
@@ -102,6 +102,9 @@
                 }
             });
         }
+          $(document).ready(function(){
+
+        })
     </script>
 </head>
 
@@ -145,21 +148,32 @@
     <!-- product list -->
     <div class="mycards">
         <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
-            {% for board in boards %}
-            <a href="/detail?id={{ board._id }}" class="ex-hyper">
+       {% for board in boards %}
+                 <a href="/detail?id={{ board._id }}" class="ex-hyper">
                 <div class="col">
                     <div class="card h-100">
                         <div class="card-img-top" style="background-image: url('{{ url_for('static', filename=board.file) }}');"></div>
                         <div class="card-body" style="background-color: whitesmoke;">
                             <h5 class="card-title">{{ board.title }}</h5>
                             <p class="card-price" style="text-align: left">{{ board.price }} 원</p>
-                            <p class="number" style="text-align: right">{{ board.participant }}명이 필요해요💚</p>
+                            <p class="number" style="text-align: right" id="number">
+                                {% for key,value in like.items() %}
+                                    {% if board._id|string == key %}
+
+                                        {% if board['participant']|int-value|int == 0 %}
+                                            "마감완료 💚"
+                                        {% else %}
+                                           "{{ board['participant']|int-value|int }}명이 필요해요 💚"
+                                        {% endif %}
+                                    {% endif %}
+                                    {% endfor %}
+                            </p>
                             <p class="mydate" style="text-align: right">{{ board.date }}</p>
                         </div>
                     </div>
                 </div>
             </a>
-            {% endfor %}
+       {% endfor %}
         </div>
     </div>
     <!-- product list -->

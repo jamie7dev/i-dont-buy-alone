@@ -18,6 +18,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
     <title>나혼자안산다</title>
     <script>
 
@@ -41,7 +42,43 @@
         }
         function join(){
 
+            let _id = '{{ board._id }}'
+            let user_id = localStorage.getItem("accountEmail")
+
+            let like
+            {{ like_count }}
+            {% for i in like %}
+                if(user_id=='{{ i.user_id}}'){
+                    like=0
+                }else{
+                    like=1
+                }
+            {% endfor %}
+
+             $.ajax({
+                    type: "POST",
+                    url: "/like",
+                    data: {
+                        id: _id,
+                        user_id : user_id,
+                        like : like
+                    },
+                    success: function () {
+                        window.location.reload()
+                    }
+                })
         }
+        $(document).ready(function(){
+            let tmp;
+            if('{{ board['participant']|int-like_count|int }}'=='0'){
+                tmp ="마감완료 💚"
+            }else{
+            tmp = "{{ board['participant']|int-like_count|int }}명이 필요해요 💚"
+            }
+            $('#partiocipant').append(tmp)
+        })
+
+
     </script>
 </head>
 
@@ -65,10 +102,10 @@
               <h5 class="title">{{ board['title'] }}</h5>
               <p class="uploader">작성자: {{ board['nickname'] }}</p>
               <p class="date">{{ board['date'] }}</p>
-              <p class="participant">{{ board['participant'] }}명이 필요해요💚</p>
+              <p class="participant" id="partiocipant"></p>
               <p class="price">{{ board['price'] }}원</p>
                 <button id="erase" onclick="erase()">삭제버튼</button>
-                <a onclick="join({{ board._id }})" >참가하기</a>
+                <a href="#" onclick="join()"; >참가하기</a>
             </div>
         </div>
     </article>
@@ -89,6 +126,7 @@
                         <div class="fw-bold">{{ data['nickname'] }}</div>
                         {{ data['replyContent'] }}
                     </div>
+
                 </div>
                 <hr>
                 {% endfor %}

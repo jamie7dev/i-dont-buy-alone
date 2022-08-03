@@ -51,8 +51,13 @@
                 <div class="col-lg-4">
                     <div class="card mb-4">
                         <div class="card-body text-center">
+                            {% if account.profileImg %}
                             <img src="{{ url_for('static', filename=account.profileImg) }}"
                                 alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                            {% else %}
+                            <img src="https://cdn.vectorstock.com/i/1000x1000/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.webp"
+                                alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                            {% endif %}
                             <h5 class="my-3">{{ account.nickname }}</h5>
                             <label class="input-file-button" for="input-profile">
                                 +

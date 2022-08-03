@@ -45,9 +45,15 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-success">
         <div class="container-fluid">
             <a class="navbar-brand" href="/" style="color: white;">나 혼자 "안" 산다💪</a>
+            {% if account.profileImg %}
             <div class="profile-box" style="background: #BDBDBD;">
                 <img class="profile" src="{{ url_for('static', filename=account.profileImg) }}">
             </div>
+            {% else %}
+            <div class="profile-box" style="background: #BDBDBD;">
+                <img class="profile" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg">
+            </div>
+            {% endif %}
             <a class="navbar-brand" href="/upload" style="color: white;margin-left: 10px;"><button class="btn btn-outline-light">업로드</button></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"

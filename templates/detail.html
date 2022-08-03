@@ -53,7 +53,15 @@
                 <!-- Single comment-->
                 {% for data in reply %}
                 <div class="d-flex">
-                    <div class="flex-shrink-0" style="padding: 5px;"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                    {% if data.profileImg %}
+                    <div class="profile-box" style="background: #BDBDBD;">
+                        <img class="profile" src="{{ url_for('static', filename=data.profileImg) }}">
+                    </div>
+                    {% else %}
+                    <div class="profile-box" style="background: #BDBDBD;">
+                        <img class="profile" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg">
+                    </div>
+                    {% endif %}
                     <div class="ms-3">
                         <div class="fw-bold">{{ data['nickname'] }}</div>
                         {{ data['replyContent'] }}

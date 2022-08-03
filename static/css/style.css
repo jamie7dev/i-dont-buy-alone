@@ -40,6 +40,11 @@ a {
   font-size: large;
 }
 
+.uploader {
+  text-align: right;
+  font-weight: bold;
+}
+
 .date {
   text-align: right;
   font-family: 'Noto Sans KR', sans-serif;

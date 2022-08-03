@@ -29,10 +29,4 @@ async function replySubmit() {
   result.repliable ? window.location.reload() : alert('댓글을 달 수 없습니다.');
 }
 
-function main() {
-  const replySubmitBtn = document.getElementById('reply-submit-btn');
-
-  replySubmitBtn.addEventListener('click', replySubmit);
-}
-
-main();
+export { replySubmit, };

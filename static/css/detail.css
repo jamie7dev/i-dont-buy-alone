@@ -74,5 +74,12 @@ a {
 .ms-3 {
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: lighter;
+}
 
+.input-file-button{
+  padding: 6px 25px;
+  background-color: #1E7E5E;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
 }

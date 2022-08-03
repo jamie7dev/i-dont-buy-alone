@@ -28,14 +28,20 @@ def auth_cookie():
 ##전체 인덱스 찾기
 @app.route('/', methods=['GET'])
 def view_index():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
     # 인덱스 형성
     boards = list(db.board.find({}))
     category = list(db.category.find({}, {'_id': False}))
 
     return render_template("index.html", boards=boards, category=category)
+    
 ##카테고리 인덱스만 찾기
 @app.route('/<keyword>')
 def find_index(keyword):
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+
     if keyword.isdigit():
         boards = list(db.board.find({}))
     else:
@@ -46,6 +52,9 @@ def find_index(keyword):
 
 @app.route('/search/', methods=['GET'])
 def search_index():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+
     title_receive = request.args.get('title_give')
     boards=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
     category = list(db.category.find({}, {'_id': False}))
@@ -55,6 +64,9 @@ def search_index():
 ################################## DETAIL ##################################
 @app.route('/detail', methods=["GET"])
 def detail():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+
     query_string = request.args.get('id')
     board = db.board.find_one({ '_id': ObjectId(query_string) })
     reply = db.reply.find({ 'boardId': query_string} )
@@ -63,6 +75,9 @@ def detail():
 
 @app.route('/detail/reply', methods=["POST"])
 def reply():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+
     params = request.get_json()
 
     doc = {
@@ -141,12 +156,14 @@ def is_in_use_email():
 def upload():
     if auth_cookie():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+
     return render_template('upload.html')
 
 @app.route('/upload', methods=['POST'])
 def save_upload():
     if auth_cookie():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+
     title_receive = request.form['title_give']
     content_receive = request.form['content_give']
     category_receive = request.form['category_give']

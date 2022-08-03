@@ -33,8 +33,14 @@ def view_index():
     # 인덱스 형성
     boards = list(db.board.find({}))
     category = list(db.category.find({}, {'_id': False}))
+    
+    # 접속 중인 계정 찾기.
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
-    return render_template("index.html", boards=boards, category=category)
+    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+
+    return render_template("index.html", boards=boards, category=category, account=user_info)
     
 ##카테고리 인덱스만 찾기
 @app.route('/<keyword>')
@@ -145,10 +151,10 @@ def confirm_signin():
           'expire': json.dumps(datetime.utcnow() + timedelta(seconds = 60 * 60), default=str)
         }
         # ec2
-        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256').decode('utf-8')
+        # token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256').decode('utf-8')
 
         # local
-        # token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
 
         return jsonify({
           'result': True, 
@@ -252,6 +258,38 @@ def render_profile():
     boards = list(db.board.find({"boardEmail": payload["accountEmail"]}))
     
     return render_template('profile.html', account=user_info, boards=boards)
+@app.route('/profile/img', methods=['POST'])
+def upload_img_profile():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+    
+    file = request.files["profileImg"]
+
+    extension = file.filename.split('.')[-1]
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+    mytime2= today.strftime('%m월 %d일 %H시 %M분')
+    filename = f'file-{mytime}'
+
+    print(filename)
+
+    save_to = f'static/{filename}.{extension}'
+    file.save(save_to)
+
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+    print(user_info)
+    print('static/' + filename)
+    profileUpload = db.account.update_one({
+      'accountEmail': payload['accountEmail']
+      }, 
+      { 
+        '$set': { 'profileImg': f'{filename}.{extension}'} 
+      })
+
+    return jsonify({'msg': 'success!'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000, debug = True)

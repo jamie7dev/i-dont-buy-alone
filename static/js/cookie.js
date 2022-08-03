@@ -17,8 +17,15 @@ function deleteCookie(name) {
   document.cookie = name + "= " + "; expires=" + date.toUTCString() + "; path=/";
 }
 
+function restrictionsByCookies() {
+  if (getCookie('mytoken')) {
+    window.location.href = '/';
+  }
+}
+
 export { 
   setCookie, 
   getCookie, 
   deleteCookie, 
+  restrictionsByCookies,
 };

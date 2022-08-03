@@ -1,5 +1,7 @@
 "use strict";
 
+import { deleteCookie } from './cookie.js'
+
 function onSignOut() {
   deleteCookie('mytoken');
   localStorage.clear();

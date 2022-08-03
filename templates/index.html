@@ -14,76 +14,11 @@
         crossorigin="anonymous"></script>
     <!-- Bootstrap -->
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <meta charset="UTF-8">
     <title>나혼자안산다</title>
-    <style>
-        body {
-          font-family: 'Do Hyeon', sans-serif;
-        }
-        .card-body { 
-            background-color: whitesmoke; 
-            box-shadow: 3px 3px 3px #999; 
-            border-radius: 20px; 
-        }
-        
-        .btn {
-            padding: .55rem 1.5rem .45rem;
-        }
-
-        .ex-hyper:hover {
-            text-decoration: none;
-            color: black;
-        }
-
-        .ex-hyper:hover {
-            text-decoration: none;
-            color: black;
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-        }
-
-        .mycards {
-            margin: 20px auto 0px auto;
-            width: 95%;
-            max-width: 1200px;
-        }
-
-        .mytable {
-            margin: auto;
-            max-width: 100%;
-            height: 100%;
-            width: 100%;
-        }
-
-        .mytable>tbody>tr>td>a {
-            text-decoration: none;
-            color: black;
-        }
-
-        .mytable>tbody>tr>td>a:hover {
-            text-decoration: none;
-            color: black;
-        }
-
-        .mytable>tbody>tr>td {
-            border: 1px solid #333;
-            height: 100%;
-            width: 5%;
-            max-width: 10%;
-            vertical-align: middle;
-            text-align: center;
-        }
-        .card-img-top {
-            width: 100%;
-            height: 150px;
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
     <script>
         function search() {
             let word = $('#text_type').val()
@@ -110,6 +45,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-success">
         <div class="container-fluid">
             <a class="navbar-brand" href="/" style="color: white;">나 혼자 "안" 산다💪</a>
+            <div class="profile-box" style="background: #BDBDBD;">
+                <img class="profile" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg">
+            </div>
+            <a class="navbar-brand" href="/upload" style="color: white;margin-left: 10px;"><button class="btn btn-outline-light">업로드</button></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">

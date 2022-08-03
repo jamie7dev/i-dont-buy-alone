@@ -73,6 +73,36 @@ def detail():
 
     return render_template('detail.html', board = board, reply = reply, query_string = query_string)
 
+@app.route('/detail', methods=["POST"])
+def is_create_user():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+
+    params = request.get_json()
+    query_string = params['queryString']
+
+    board = db.board.find_one({ 
+        '_id': ObjectId(query_string),
+        'boardEmail': params['accountEmail'],
+        'nickname': params['nickname']
+    })
+
+    if board is not None:
+        return jsonify({ 'isOwn': True })
+    return jsonify({ 'isOwn': False })
+
+########################## 게시물 삭제 #############################
+@app.route('/detail/<query_string>/delete', methods=['DELETE'])
+def delete_board(query_string):
+    board = db.board.find_one({ '_id': ObjectId(query_string) })
+    deletable = True
+    if board is None:
+        deletable = False
+    else:
+        db.board.delete_one({ '_id': ObjectId(query_string) })
+    return jsonify({ 'delete': deletable })
+
+########################## 댓글 달기 ##############################
 @app.route('/detail/reply', methods=["POST"])
 def reply():
     if auth_cookie():
@@ -95,6 +125,8 @@ def reply():
 ################################## SIGNIN ##################################
 @app.route('/signin', methods=["GET"])
 def render_signin():
+    if auth_cookie()==False:
+        return redirect(url_for("view_index"))
     return render_template('signin.html')
 
 @app.route('/signin', methods=["POST"])
@@ -125,6 +157,8 @@ def confirm_signin():
 ################################## SIGNUP ##################################
 @app.route('/signup', methods=["GET"])
 def render_signup():
+    if auth_cookie()==False:
+        return redirect(url_for("view_index"))
     return render_template('signup.html')
 
 @app.route('/signup', methods=["POST"])
@@ -202,5 +236,16 @@ def save_upload():
 
     return jsonify({'msg': ' 작성 완료!'})
 
+########################### 프로필 ####################################################     
+@app.route('/profile', methods=['GET'])
+def render_profile():
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+    
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+
+    return render_template('profile.html', account=user_info)
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000, debug = True)

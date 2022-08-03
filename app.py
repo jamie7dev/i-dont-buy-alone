@@ -165,7 +165,7 @@ def confirm_signin():
           'expire': json.dumps(datetime.utcnow() + timedelta(seconds = 60 * 60), default=str)
         }
         # ec2
-        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256').decode('utf-8')
+        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
 
         # local
         # token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
@@ -192,7 +192,8 @@ def confirm_signup():
     account = {
       'accountEmail': params['accountEmail'],
       'nickname': params['nickname'],
-      'pw': hashlib.sha256(params['pw'].encode('utf-8')).hexdigest()
+      'pw': hashlib.sha256(params['pw'].encode('utf-8')).hexdigest(),
+      'profileImg': params['profileImg']
     }
 
     db.account.insert_one(account)

@@ -1,6 +1,6 @@
 "use strict";
 
-import { setCookie } from "./cookie.js";
+import { setCookie, restrictionsByCookies } from "./cookie.js";
 
 async function submitSignIn() {
   const errorMsg = document.getElementById('error-msg');
@@ -35,6 +35,7 @@ async function submitSignIn() {
 }
  
 function main() {
+  restrictionsByCookies();
   const signInBtn = document.getElementById('signin');
   signInBtn.addEventListener('click', submitSignIn);
 }

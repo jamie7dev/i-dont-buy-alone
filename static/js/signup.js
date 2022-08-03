@@ -1,5 +1,7 @@
 "use strict";
 
+import { restrictionsByCookies } from "./cookie.js";
+
 function isValidPassword(event) {
   const helpPassword = document.getElementById('help-password');
   const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
@@ -29,6 +31,7 @@ function allAreEqual(obj) {
 
 async function submitSignup() {
   const URL = '/signup';
+  const accountImg = '';
   const email = document.getElementById('email');
   const password = document.getElementById('password');
   const confirmPassword = document.getElementById('confirm-password');
@@ -52,6 +55,7 @@ async function submitSignup() {
         'nickname': nickname.value,
         'pw': password.value,
         'phone': phone.value,
+        'accountImg': accountImg,
       }),
     }
   
@@ -110,6 +114,7 @@ function isSamePassword() {
 }
 
 function main() {
+  restrictionsByCookies();
   const signupBtn = document.getElementById('signup');
   const email = document.getElementById('email');
   const password = document.getElementById('password');

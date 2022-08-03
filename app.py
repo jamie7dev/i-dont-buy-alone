@@ -242,10 +242,11 @@ def render_profile():
     if auth_cookie():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
     
-    token_receive = request.cookies.get('mytoken')
+    token_receive = request.cookies.get("mytoken")
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
-
-    return render_template('profile.html', account=user_info)
+    boards = list(db.board.find({"boardEmail": payload["accountEmail"]}))
+    
+    return render_template('profile.html', account=user_info, boards=boards)
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000, debug = True)

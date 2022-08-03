@@ -63,6 +63,26 @@ def search_index():
     boards=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
     category = list(db.category.find({}, {'_id': False}))
     return render_template("index.html",boards=boards, category=category)
+
+@app.route('/like', methods=['POST'])
+def like():
+    id      = request.form["id"]
+    user_id = request.form["user_id"]
+    like    = request.form["like"]
+    doc = {
+    'boardId': id,
+    'user_id': user_id,
+    'like' : like
+    }
+    print(doc)
+    if(like=='1'):
+        db.like.insert_one(doc)
+    else:
+        db.like.delete_one({'user_id' :user_id})
+
+    return jsonify({"result": "success", 'msg': 'updated'})
+
+
 ######Lee1231234 make end######
 
 ################################## DETAIL ##################################
@@ -75,7 +95,11 @@ def detail():
     board = db.board.find_one({ '_id': ObjectId(query_string) })
     reply = db.reply.find({ 'boardId': query_string} )
 
-    return render_template('detail.html', board = board, reply = reply, query_string = query_string)
+    ##전체 좋아요 갯수와 자신을 들고옴
+    like_count = db.like.count_documents({})
+    like = db.like.find({'boardId': query_string},{'_id': False})
+
+    return render_template('detail.html', board = board, reply = reply, query_string = query_string,like=like,like_count=like_count)
 
 @app.route('/detail/reply', methods=["POST"])
 def reply():

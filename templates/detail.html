@@ -15,7 +15,7 @@
 
             
             let number = '{{ board['participant']|int-like_count|int  }}';
-            console.log(number);
+
 
             if (number === '0') {
                 alert('이미 마감');
@@ -24,8 +24,12 @@
 
             let _id = '{{ board._id }}';
             let userId = localStorage.getItem('accountEmail');
-            console.log(userId);
-            
+
+             if(userId=='{{ board.boardEmail }}'){
+                 alert('자신의 1/n은 참가할수없습니다');
+                 return;
+             }
+
             let like = 1;
             {% for i in like %}
             if (userId == '{{ i.user_id }}') {

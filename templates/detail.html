@@ -8,7 +8,72 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
     <title>나혼자안산다</title>
+    <script>
+        async function join() {
+
+            
+            let number = '{{ board['participant']|int-like_count|int  }}';
+            console.log(number);
+
+            if (number === '0') {
+                alert('이미 마감');
+                return;
+            }
+
+            let _id = '{{ board._id }}';
+            let userId = localStorage.getItem('accountEmail');
+            console.log(userId);
+            
+            let like = 1;
+            {% for i in like %}
+            if (userId == '{{ i.user_id }}') {
+                like = 0;
+            } else {
+                like = 1;
+            }
+            {% endfor %}
+
+            const URL = '/like';
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'id': _id,
+                    'user_id': userId,
+                    'like': like,
+                }),
+            };
+
+            let response = await fetch(URL, options).catch(error => console.log(error));
+            let result = await response.json().catch(error => console.log(error));
+            console.log(result);
+            
+            if (result.result === 'success') {
+                {% if join_msg == '참여하기' %}
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: '참여 완료!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                .then((result) => window.location.reload());
+                {% else %}
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: '다음에 함께 해요 😎',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then((result) => window.location.reload());   
+                {% endif %}             
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -23,32 +88,41 @@
     </header>
     <article style="margin-top: 50px;">
         <div class="container">
-            
-            <div class="detail-pic my-4" style="background-image: url('{{ url_for('static', filename=board.file) }}');"></div>
+
+            <div class="detail-pic my-4" style="background-image: url('{{ url_for('static', filename=board.file) }}');">
+            </div>
             <div>
-              <h5></h5>
-              <hr>
-              <button class="btn btn-primary btn-outline-light" id="btn-join" style="background-color: #1E7E5E;">
-                참여하기
-              </button>
-              <hr>
-              <h5 class="title">{{ board['title'] }}</h5>
-              <p class="uploader">작성자:{{ board['nickname'] }}</p>
-              <p class="date">{{ board['date'] }}</p>
-              <p class="participant">{{ board['participant'] }}명이 필요해요💚</p>
-              <p class="price">{{ board['price'] }}원</p>
+                <h5></h5>
+                <hr>
+                <button class="btn btn-primary btn-outline-light" id="btn-join" onclick="join()"
+                    style="background-color: #1E7E5E;">
+                    {{ join_msg }}
+                </button>
+                <hr>
+                <h5 class="title">{{ board['title'] }}</h5>
+                <p class="uploader">작성자:{{ board['nickname'] }}</p>
+                <p class="date">{{ board['date'] }}</p>
+                <p class="participant" id="partiocipant" value={{ board['participant']|int-like_count|int }}>
+                    {% if board['participant']|int-like_count|int == 0 %}
+                    "마감완료 💚"
+                    {% else %}
+                    {{ board['participant']|int-like_count|int }}명이 필요해요 💚
+                    {% endif %}
+                </p>
+                <p class="price">{{ board['price'] }}원</p>
 
             </div>
         </div>
     </article>
-    
+
     <section class="mb-5">
         <div class="card bg-light">
             <div class="card-body">
                 <!-- Comment form-->
                 <form class="mb-4">
                     <textarea class="form-control" id="form-reply" rows="3" placeholder="작성자님과 소통해요!"></textarea>
-                    <button type="button" id="reply-submit-btn" class="btn btn-primary float-right btn-outline-light">댓글 달기</button>
+                    <button type="button" id="reply-submit-btn" class="btn btn-primary float-right btn-outline-light">댓글
+                        달기</button>
                 </form>
                 <!-- Single comment-->
                 {% for data in reply %}
@@ -66,15 +140,6 @@
             </div>
         </div>
     </section>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
     <script type="module" src="{{ url_for('static', filename='js/detail.js') }}" defer> </script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

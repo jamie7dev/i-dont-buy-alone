@@ -31,6 +31,7 @@
                     url: "/delete",
                     data: {
                         delete_id: _id,
+                        file_url : '{{ board.file }}'
                     },
                     success: function () {
                         window.location.replace("/")
@@ -50,9 +51,9 @@
             let _id = '{{ board._id }}'
             let user_id = localStorage.getItem("accountEmail")
 
-            let like
+            let like = 1
             {% for i in like %}
-                if(user_id=='{{ i.user_id}}'){
+                if(user_id=='{{i.user_id}}'){
                     like=0
                 }else{
                     like=1

@@ -1,13 +1,18 @@
 import os
+
+import certifi
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from bson.objectid import ObjectId
 from pymongo import MongoClient
-from mongo_info import connect
+
 import jwt, hashlib, json
 from datetime import datetime
 from datetime import timedelta
 
-client = MongoClient(connect)
+ca = certifi.where()
+
+client = MongoClient('mongodb+srv://lee1231234:lee1231234@cluster0.vms1u.mongodb.net/?retryWrites=true&w=majority',
+                     tlsCAFile=ca)
 db = client.dbibla
 
 app = Flask(__name__)
@@ -85,6 +90,7 @@ def search_index():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
 
     title_receive = request.args.get('title_give')
+    print(title_receive)
     boards=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
     category = list(db.category.find({}, {'_id': False}))
 
@@ -330,6 +336,20 @@ def render_profile():
     boards = list(db.board.find({"boardEmail": payload["accountEmail"]}))
     
     return render_template('profile.html', account=user_info, boards=boards)
+
+
+@app.route('/profile/<keyword>', methods=['GET'])
+def render_other_profile(keyword):
+    if auth_cookie():
+        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+
+    token_receive = request.cookies.get("mytoken")
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+    boards = list(db.board.find({"boardEmail": payload["accountEmail"]}))
+
+    return render_template('profile.html', account=user_info, boards=boards)
+
 @app.route('/profile/img', methods=['POST'])
 def upload_img_profile():
     if auth_cookie():

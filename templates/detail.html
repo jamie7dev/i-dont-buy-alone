@@ -100,7 +100,7 @@
                 </button>
                 <hr>
                 <h5 class="title">{{ board['title'] }}</h5>
-                <p class="uploader">작성자:{{ board['nickname'] }}</p>
+                <p class="uploader" id="uploader">작성자:{{ board['nickname'] }}</p>
                 <p class="date">{{ board['date'] }}</p>
                 <p class="participant" id="partiocipant" value={{ board['participant']|int-like_count|int }}>
                     {% if board['participant']|int-like_count|int == 0 %}

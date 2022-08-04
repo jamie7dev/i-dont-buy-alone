@@ -21,7 +21,7 @@
     <title>나혼자안산다</title>
     <script>
         function search() {
-            let word = $('#text_type').val()
+            let word = $('#search_page').val()
             if (word == "") {
                 alert("값을 입력해주세요")
                 return
@@ -73,8 +73,8 @@
                             </ul>
                         </li>
                     </ul>
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search">
-                    <button class="btn btn-outline-light" id="search-btn" type="submit" style="color: white;">Search</button>
+                    <input class="form-control me-2"  type="text" placeholder="Search" aria-label="Search" id="search_page">
+                    <button class="btn btn-outline-light" id="search-btn" style="color: white;" onclick=search()>Search</button>
                 </form>
             </div>
         </div>

@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from bson.objectid import ObjectId
 from pymongo import MongoClient
@@ -14,6 +15,18 @@ app = Flask(__name__)
 SECRET_KEY = 'team7'
 
 ######Lee1231234 make here######
+def count_like(boards):
+    id = []
+    count = []
+    for board in boards:
+        id.append(str(board['_id']))
+    for i in id:
+        count.append(db.like.count_documents({'boardId': i}))
+    doc = {}
+    for i in range(len(id)):
+        doc[id[i]] = count[i]
+    return doc
+
 def auth_cookie():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -40,7 +53,9 @@ def view_index():
 
     user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
 
-    return render_template("index.html", boards=boards, category=category, account=user_info)
+    doc =count_like(boards)
+
+    return render_template("index.html", boards=boards, category=category, account=user_info, like=doc)
     
 ##카테고리 인덱스만 찾기
 @app.route('/<keyword>')
@@ -60,7 +75,9 @@ def find_index(keyword):
 
     user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
 
-    return render_template("index.html", boards=boards, category=category, account=user_info)
+    doc = count_like(boards)
+
+    return render_template("index.html", boards=boards, category=category, account=user_info, like=doc)
 
 @app.route('/search/', methods=['GET'])
 def search_index():
@@ -76,8 +93,32 @@ def search_index():
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
     user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+    
+    doc = count_like(boards)
 
-    return render_template("index.html",boards=boards, category=category, account=user_info)
+    return render_template("index.html",boards=boards, category=category, account=user_info, like=doc)
+
+@app.route('/like', methods=['POST'])
+def like():
+    params = request.get_json()
+
+    id      = params['id']
+    user_id = params['user_id']
+    like = params['like']
+    doc = {
+    'boardId': id,
+    'user_id': user_id,
+    'like' : like
+    }
+
+    print(doc)
+
+    if(like==1):
+        db.like.insert_one(doc)
+    else:
+        db.like.delete_one({'user_id' :user_id})
+
+    return jsonify({"result": "success", 'msg': 'updated'})
 ######Lee1231234 make end######
 
 ################################## DETAIL ##################################
@@ -89,8 +130,17 @@ def detail():
     query_string = request.args.get('id')
     board = db.board.find_one({ '_id': ObjectId(query_string) })
     reply = list(db.reply.find({ 'boardId': query_string} ))
-
-    return render_template('detail.html', board = board, reply = reply, query_string = query_string)
+    
+    ##전체 좋아요 갯수와 자신을 들고옴
+    like_count = db.like.count_documents({'boardId': query_string})
+    like = list(db.like.find({'boardId': query_string},{'_id': False}))
+    print('=================render_detail=================')
+    join_msg = ''
+    if not like:
+        join_msg = '참여하기'
+    else:
+        join_msg = '나가기'
+    return render_template('detail.html', board = board, reply = reply, query_string = query_string, like=like,like_count=like_count, join_msg=join_msg)
 
 @app.route('/detail', methods=["POST"])
 def is_create_user():
@@ -118,7 +168,13 @@ def delete_board(query_string):
     if board is None:
         deletable = False
     else:
+        board_file = board['file']
+        print(board_file)
+        
+        os.remove(os.getcwd()+'/static/'+ board_file)
         db.board.delete_one({ '_id': ObjectId(query_string) })
+        db.reply.delete_many({ 'boardId': query_string})
+    
     return jsonify({ 'delete': deletable })
 
 ########################## 댓글 달기 ##############################
@@ -165,10 +221,10 @@ def confirm_signin():
           'expire': json.dumps(datetime.utcnow() + timedelta(seconds = 60 * 60), default=str)
         }
         # ec2
-        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
+        # token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256').decode('utf-8')
 
         # local
-        # token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
 
         return jsonify({
           'result': True, 

@@ -103,7 +103,7 @@ def search_index():
     doc = count_like(boards)
 
     return render_template("index.html",boards=boards, category=category, account=user_info, like=doc)
-
+###참가여부를 묻는 route
 @app.route('/like', methods=['POST'])
 def like():
     params = request.get_json()
@@ -125,6 +125,30 @@ def like():
         db.like.delete_one({'user_id' :user_id})
 
     return jsonify({"result": "success", 'msg': 'updated'})
+
+
+@app.route('/favorite', methods=['POST'])
+def favorite():
+    favorite_id = request.form['id_give']
+
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+    print(user_info['accountEmail'],favorite_id)
+
+    doc = {
+    'favorite_Id': user_info['accountEmail'],
+    'favorited_id': favorite_id,
+    }
+    if(user_info['accountEmail']==favorite_id):
+        return  jsonify({"number": db.favorite.count_documents({'favorite_Id': user_info['accountEmail']})})
+    if(db.favorite.count_documents(doc)==0):
+        db.favorite.insert_one(doc)
+    else:
+        db.favorite.delete_one(doc)
+
+    return jsonify({"number": db.favorite.count_documents({'favorite_Id': user_info['accountEmail']})})
 ######Lee1231234 make end######
 
 ################################## DETAIL ##################################

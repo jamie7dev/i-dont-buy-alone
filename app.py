@@ -85,6 +85,7 @@ def search_index():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
 
     title_receive = request.args.get('title_give')
+    print(title_receive)
     boards=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
     category = list(db.category.find({}, {'_id': False}))
 

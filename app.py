@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from bson.objectid import ObjectId
 from pymongo import MongoClient
@@ -83,14 +85,17 @@ def search_index():
 
 @app.route('/like', methods=['POST'])
 def like():
+    print("aa")
     id      = request.form["id"]
     user_id = request.form["user_id"]
     like    = request.form["like"]
+    print("bb")
     doc = {
     'boardId': id,
     'user_id': user_id,
     'like' : like
     }
+    print("cc")
     print(doc)
     if(like=='1'):
         db.like.insert_one(doc)
@@ -114,7 +119,8 @@ def detail():
 
     ##전체 좋아요 갯수와 자신을 들고옴
     like_count = db.like.count_documents({'boardId': query_string})
-    like = db.like.find({'boardId': query_string},{'_id': False})
+    like = list(db.like.find({'boardId': query_string},{'_id': False}))
+    print(like)
 
     return render_template('detail.html', board = board, reply = reply, query_string = query_string,like=like,like_count=like_count)
 
@@ -261,9 +267,16 @@ def save_upload():
 def delete():
     if auth_cookie():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
+    print("aa4")
     id_receive = request.form["delete_id"]
+    file_receive = request.form["file_url"]
+    print("aa2")
     db.board.delete_one({'_id': ObjectId(id_receive)})
     db.reply.delete_many({'boardId': id_receive})
+    print("aa3")
+    db.like.delete_many({'boardId': id_receive})
+    print("aa1")
+    os.remove('/static/'+file_receive)
     return jsonify({"result": "success", 'msg': 'updated'})
 
 if __name__ == '__main__':

@@ -30,10 +30,11 @@
             $.ajax({
                 type: "GET",
                 url: `/search/?title_give=${word}`,
-                data: {},
                 success: function (response) {
-                    alert("성공")
-                    window.location.href = "/search/?title_give=" + word
+                    let code= `/search/?title_give=${word}`
+
+                    window.location.reload()
+                    window.location.href = code
                 }
             });
         }

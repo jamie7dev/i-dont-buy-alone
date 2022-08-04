@@ -93,7 +93,7 @@ def search_index():
     print(title_receive)
     boards=list(db.board.find({"title": {'$regex' : '.*' +title_receive+ '.*'}}))
     category = list(db.category.find({}, {'_id': False}))
-
+    print(boards)
     # 접속 중인 계정 찾기.
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -329,26 +329,23 @@ def save_upload():
 def render_profile():
     if auth_cookie():
         return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
-    
-    token_receive = request.cookies.get("mytoken")
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
-    boards = list(db.board.find({"boardEmail": payload["accountEmail"]}))
-    
-    return render_template('profile.html', account=user_info, boards=boards)
 
-
-@app.route('/profile/<keyword>', methods=['GET'])
-def render_other_profile(keyword):
-    if auth_cookie():
-        return redirect(url_for("render_signin", msg="로그인이 필요합니다."))
-
-    token_receive = request.cookies.get("mytoken")
-    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-    user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
-    boards = list(db.board.find({"boardEmail": payload["accountEmail"]}))
+    id_receive = request.args.get('id_give')
+    print(id_receive)
+    if(id_receive is None):
+        token_receive = request.cookies.get("mytoken")
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
+        boards = list(db.board.find({"boardEmail": payload["accountEmail"]}))
+    else:
+        user_info = db.account.find_one({"accountEmail": id_receive})
+        boards = list(db.board.find({"boardEmail": id_receive}))
+    print(user_info,boards)
 
     return render_template('profile.html', account=user_info, boards=boards)
+
+
+
 
 @app.route('/profile/img', methods=['POST'])
 def upload_img_profile():

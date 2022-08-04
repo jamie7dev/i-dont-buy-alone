@@ -11,6 +11,44 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title>나혼자안산다</title>
+    <script>
+        $(document).ready(function (){
+            let form_data = new FormData()
+            let data = '{{ account.accountEmail }}'
+            form_data.append("id_give" , data )
+            $.ajax({
+                type: "POST",
+                url: "/favorite",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    let tmp= response["number"]
+                    $('#favorite_number').empty()
+                    $('#favorite_number').append(tmp+"명")
+                }
+            });
+        })
+        function favorite() {
+            let form_data = new FormData()
+            let data = '{{ account.accountEmail }}'
+            form_data.append("id_give" , data )
+            $.ajax({
+                type: "POST",
+                url: "/favorite",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    let tmp= response["number"]
+                    $('#favorite_number').empty()
+                    $('#favorite_number').append(tmp+"명")
+                }
+            });
+        }
+    </script>
 </head>
 
 <body>
@@ -25,14 +63,13 @@
             <li class="nav-item" id="nav_item">
                 <script>
                     let email = localStorage.getItem('accountEmail')
-                    let temp
-
+                    let temp = ""
                     if (email == '{{ account.accountEmail }}') {
                         temp = ` <button class="btn btn-primary btn-submit btn-outline-light" id="signout"
                         style="background-color: #1E7E5E;">
                         로그아웃
                     </button>`
-                        $('#card-body').append(temp)
+                        $('#nav_item').append(temp)
                     }
 
                 </script>
@@ -65,8 +102,8 @@
                              alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3">{{ account.nickname }}</h5>
                         <script>
-                            let email = localStorage.getItem('accountEmail')
-                            let temp
+                            email = localStorage.getItem('accountEmail')
+                            temp = ""
 
                             if (email == '{{ account.accountEmail }}') {
                                 temp = `<label class="input-file-button" for="input-profile">
@@ -101,6 +138,15 @@
                             </div>
                         </div>
                         <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">추천인</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <button onclick="favorite()">추천하기</button>
+                                <p class="text-muted mb-0" id="favorite_number"></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

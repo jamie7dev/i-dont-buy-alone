@@ -130,25 +130,28 @@ def like():
 @app.route('/favorite', methods=['POST'])
 def favorite():
     favorite_id = request.form['id_give']
-
+    see = request.form['see']
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-
     user_info = db.account.find_one({"accountEmail": payload["accountEmail"]})
-    print(user_info['accountEmail'],favorite_id)
+    number = db.favorite.count_documents({'favorited_id': favorite_id})
+    if(see=='0'):
+        return jsonify({"number": number})
+
+    print(user_info['accountEmail'],favorite_id,number)
 
     doc = {
     'favorite_Id': user_info['accountEmail'],
     'favorited_id': favorite_id,
     }
     if(user_info['accountEmail']==favorite_id):
-        return  jsonify({"number": db.favorite.count_documents({'favorite_Id': user_info['accountEmail']})})
+        return jsonify({"number": db.favorite.count_documents({'favorited_id': favorite_id})})
     if(db.favorite.count_documents(doc)==0):
         db.favorite.insert_one(doc)
     else:
         db.favorite.delete_one(doc)
 
-    return jsonify({"number": db.favorite.count_documents({'favorite_Id': user_info['accountEmail']})})
+    return jsonify({"number": db.favorite.count_documents({'favorited_id': favorite_id})})
 ######Lee1231234 make end######
 
 ################################## DETAIL ##################################

@@ -167,12 +167,13 @@ def confirm_signin():
           'accountEmail': params['accountEmail'],
           'expire': json.dumps(datetime.utcnow() + timedelta(seconds = 60 * 60), default=str)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256').decode('utf8')
 
         return jsonify({
           'result': True, 
           'token': token, 
-          'nickname': account['nickname']
+          'nickname': account['nickname'],
+          'profileImg': account['profileImg']
           })
     else: 
         return jsonify({'result': False, 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
@@ -276,7 +277,7 @@ def delete():
     print("aa3")
     db.like.delete_many({'boardId': id_receive})
     print("aa1")
-    os.remove('/static/'+file_receive)
+    os.remove(os.getcwd()+'/static/'+file_receive)
     return jsonify({"result": "success", 'msg': 'updated'})
 
 if __name__ == '__main__':
